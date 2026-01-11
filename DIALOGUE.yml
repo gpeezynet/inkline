@@ -1,0 +1,192 @@
+version: 1
+pack: inkline
+
+characters:
+  - id: ARTIST
+    name: "Artist"
+    role: player
+    portrait_asset_id: CHR_ARTIST_SELF_01
+
+  - id: CASEY
+    name: "Casey"
+    role: client
+    portrait_asset_id: CHR_CLIENT_CASEY_01
+
+  - id: MIGUEL
+    name: "Miguel"
+    role: client
+    portrait_asset_id: CHR_CLIENT_MIGUEL_01
+
+  - id: LILA
+    name: "Lila"
+    role: client
+    portrait_asset_id: CHR_CLIENT_LILA_01
+
+locations:
+  - id: L02_WaitingRoom_FlashWall
+  - id: L03_FrontDesk_CheckIn
+  - id: L04_PrepStation_SterileSetup
+  - id: L05_BoothA_TheChair
+  - id: L06_AftercareCounter_ShiftEnd
+
+scenes:
+  # ---------------------------
+  # Client 1 (Easy) — Casey
+  # ---------------------------
+  - id: SCN_CASEY_CHECKIN
+    location_id: L03_FrontDesk_CheckIn
+    beats:
+      - id: B01
+        lines:
+          - speaker: CASEY
+            text: "Hey… so, I’m not gonna pass out, right?"
+          - speaker: ARTIST
+            text: "Not if you breathe and stay still. We’ll go slow."
+          - speaker: CASEY
+            text: "Small flash. Something clean. No regrets."
+
+  - id: SCN_CASEY_CHAIR_START
+    location_id: L05_BoothA_TheChair
+    beats:
+      - id: B01
+        lines:
+          - speaker: ARTIST
+            text: "Stencil goes on first. Tell me if the placement feels off."
+          - speaker: CASEY
+            text: "Okay. Yeah. That… actually looks perfect."
+          - speaker: ARTIST
+            text: "Cool. Once we start, the more steady you are, the easier it is."
+
+  - id: SCN_CASEY_MID_BARKS
+    location_id: L05_BoothA_TheChair
+    barks:
+      on_pain_25:
+        - speaker: CASEY
+          text: "That’s… spicy. But I’m good."
+      on_pain_50:
+        - speaker: CASEY
+          text: "Whew—okay—yeah, I felt that."
+      on_pain_75:
+        - speaker: CASEY
+          text: "I need a second. Please."
+      on_mistake:
+        - speaker: CASEY
+          text: "Was that… supposed to feel like that?"
+
+  - id: SCN_CASEY_FINISH
+    location_id: L06_AftercareCounter_ShiftEnd
+    beats:
+      - id: B01
+        lines:
+          - speaker: CASEY
+            text: "I did it. I’m officially one of those people now."
+          - speaker: ARTIST
+            text: "Keep it clean. Don’t pick at it. You’ll heal fine."
+          - speaker: CASEY
+            text: "Worth it. That line is so crisp."
+
+  # ---------------------------
+  # Client 2 (Medium) — Miguel
+  # ---------------------------
+  - id: SCN_MIGUEL_CHECKIN
+    location_id: L03_FrontDesk_CheckIn
+    beats:
+      - id: B01
+        lines:
+          - speaker: MIGUEL
+            text: "Let’s not make this a whole thing. Medium flash. Bold lines."
+          - speaker: ARTIST
+            text: "Bold is fine. Just means you’ll feel it longer."
+          - speaker: MIGUEL
+            text: "I’m not worried."
+
+  - id: SCN_MIGUEL_CHAIR_START
+    location_id: L05_BoothA_TheChair
+    beats:
+      - id: B01
+        lines:
+          - speaker: ARTIST
+            text: "If you tense up, the line gets harder to control."
+          - speaker: MIGUEL
+            text: "Got it. I’ll be stone."
+
+  - id: SCN_MIGUEL_MID_BARKS
+    location_id: L05_BoothA_TheChair
+    barks:
+      on_pain_25:
+        - speaker: MIGUEL
+          text: "Yeah. That’s fine."
+      on_pain_50:
+        - speaker: MIGUEL
+          text: "Okay—okay. Still fine."
+      on_pain_75:
+        - speaker: MIGUEL
+          text: "…Wipe it. Just wipe it."
+      on_mistake:
+        - speaker: MIGUEL
+          text: "That one bit. Don’t do that one again."
+
+  - id: SCN_MIGUEL_FINISH
+    location_id: L06_AftercareCounter_ShiftEnd
+    beats:
+      - id: B01
+        lines:
+          - speaker: MIGUEL
+            text: "Looks tough. I respect it."
+          - speaker: ARTIST
+            text: "Follow aftercare and it’ll stay sharp."
+          - speaker: MIGUEL
+            text: "Yeah. Yeah. I’ll take care of it."
+
+  # ---------------------------
+  # Client 3 (Hard) — Lila
+  # ---------------------------
+  - id: SCN_LILA_CHECKIN
+    location_id: L03_FrontDesk_CheckIn
+    beats:
+      - id: B01
+        lines:
+          - speaker: LILA
+            text: "I want clean linework. If it wobbles, I’ll see it forever."
+          - speaker: ARTIST
+            text: "Then we do it slow and exact. You stay still, I stay steady."
+          - speaker: LILA
+            text: "Good. No hero moves."
+
+  - id: SCN_LILA_CHAIR_START
+    location_id: L05_BoothA_TheChair
+    beats:
+      - id: B01
+        lines:
+          - speaker: ARTIST
+            text: "Last one of the shift. We finish strong."
+          - speaker: LILA
+            text: "Strong is fine. Precise is better."
+
+  - id: SCN_LILA_MID_BARKS
+    location_id: L05_BoothA_TheChair
+    barks:
+      on_pain_25:
+        - speaker: LILA
+          text: "Keep your pace. Don’t rush the corners."
+      on_pain_50:
+        - speaker: LILA
+          text: "Wipe. Now. Don’t let the ink pool."
+      on_pain_75:
+        - speaker: LILA
+          text: "Stop. Breathe. Then continue."
+      on_mistake:
+        - speaker: LILA
+          text: "That was off. Fix it before it sets."
+
+  - id: SCN_LILA_FINISH
+    location_id: L06_AftercareCounter_ShiftEnd
+    beats:
+      - id: B01
+        lines:
+          - speaker: LILA
+            text: "Okay… yeah. That’s clean."
+          - speaker: ARTIST
+            text: "That’s the goal. Sharp heals sharp."
+          - speaker: LILA
+            text: "You earned your chair tonight."

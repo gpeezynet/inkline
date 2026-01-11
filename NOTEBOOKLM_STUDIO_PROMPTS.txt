@@ -1,0 +1,116 @@
+# NotebookLM Studio Prompts for Inkline — Pitch One Pager
+
+Use these prompts in NotebookLM to generate different presentation formats.
+Copy the prompt you want and paste it into the NotebookLM chat.
+
+================================================================================
+PROMPT 1: SLIDE DECK
+================================================================================
+
+Make a slide deck for this pitch pack. Structure it as:
+
+1. Title slide with the hook: "Run the needle, keep your hand steady, and finish three walk-in tattoos before your client’s pain tops out."
+2. Player fantasy and target audience
+3. Core loop: - Greet the next walk-in and review a simple flash design (quick choice: small / medium / bold).
+- Place the stencil on the body area (align + confirm).
+- Tattoo the design: trace linework and add one pass of shading/fill.
+- Manage the client’s pain by wiping/cooling at the right moments (and by not messing up).
+- Finish, apply aftercare wrap, mark tattoo complete (progress + move to next client).
+4. Level design overview (locations and flow)
+5. Build phases and implementation tickets
+6. Scope constraints: No open world, No economy/currency, No crafting tree, 3-5 interactions max, 1 pressure system, 1 progress metric
+7. Playtest goals and success metrics
+8. Next steps / Ask
+
+Keep slides visual and concise. Use bullet points, not paragraphs.
+Target 10-12 slides total.
+
+================================================================================
+PROMPT 2: VIDEO OVERVIEW (2-4 minutes)
+================================================================================
+
+Make a 2-4 minute video overview script for this pitch pack.
+
+Start with the hook: "Run the needle, keep your hand steady, and finish three walk-in tattoos before your client’s pain tops out."
+
+Cover:
+- What the player does (core loop)
+- Why it's compelling (player fantasy)
+- How it's scoped (what we're NOT doing: No open world, No economy/currency, No crafting tree, 3-5 interactions max, 1 pressure system, 1 progress metric)
+- What success looks like (playtest goals)
+
+Tone: Enthusiastic but professional. This is for a quick team sync or stakeholder update.
+End with a clear ask or next step.
+
+================================================================================
+PROMPT 3: AUDIO OVERVIEW (6-12 minutes)
+================================================================================
+
+Make a 6-12 minute audio overview for this pitch pack.
+
+Structure as a deep-dive conversation:
+1. Introduction - hook them with: "Run the needle, keep your hand steady, and finish three walk-in tattoos before your client’s pain tops out."
+2. Player Experience - what does it feel like to play?
+3. Core Loop Breakdown - step through: - Greet the next walk-in and review a simple flash design (quick choice: small / medium / bold).
+- Place the stencil on the body area (align + confirm).
+- Tattoo the design: trace linework and add one pass of shading/fill.
+- Manage the client’s pain by wiping/cooling at the right moments (and by not messing up).
+- Finish, apply aftercare wrap, mark tattoo complete (progress + move to next client).
+4. Level Design - walk through the locations and progression
+5. Build Plan - explain the 5-ticket implementation phases
+6. Scope Discipline - emphasize what we're NOT doing: No open world, No economy/currency, No crafting tree, 3-5 interactions max, 1 pressure system, 1 progress metric
+7. Playtest Strategy - how we'll know it's working
+8. Closing - restate the vision and next steps
+
+Tone: Thoughtful, detailed, like explaining to a new team member.
+Use natural conversational language.
+
+================================================================================
+PROMPT 4: MIND MAP
+================================================================================
+
+Create a mind map for this pitch pack with the following structure:
+
+Central node: "Inkline — Pitch One Pager"
+
+Main branches:
+- Core Experience
+  - Hook: Run the needle, keep your hand steady, and finish three walk-in tattoos before your client’s pain tops out.
+  - Player Fantasy
+  - Core Loop
+- Level Design
+  - Locations (list all)
+  - Progression flow
+  - Key anchors
+- Implementation
+  - T01: Skeleton
+  - T02: Interactions
+  - T03: Pressure System
+  - T04: Progress Metric
+  - T05: Playtest Support
+- Scope Boundaries
+  - What's IN scope
+  - What's OUT: No open world, No economy/currency, No crafting tree, 3-5 interactions max, 1 pressure system, 1 progress metric
+- Validation
+  - Playtest goals
+  - Success metrics
+  - Bug categories
+
+================================================================================
+PROMPT 5: EXECUTIVE SUMMARY (1 page)
+================================================================================
+
+Write a one-page executive summary of this pitch pack.
+
+Lead with: "Run the needle, keep your hand steady, and finish three walk-in tattoos before your client’s pain tops out."
+
+Structure:
+- The Opportunity (2-3 sentences on what makes this compelling)
+- The Experience (core loop in plain language)
+- The Approach (vertical slice strategy, 5 build phases)
+- The Boundaries (No open world, No economy/currency, No crafting tree, 3-5 interactions max, 1 pressure system, 1 progress metric)
+- The Ask (what we need to proceed)
+
+Keep it under 500 words. Write for a busy stakeholder who has 2 minutes.
+
+================================================================================

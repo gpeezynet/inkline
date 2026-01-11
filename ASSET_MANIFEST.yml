@@ -1,0 +1,113 @@
+version: 1
+pack:
+  codename: inkline
+  title: Inkline
+  notes: >
+    This manifest is a shopping list for pitch/render assets. Paths are suggested.
+    You can generate images later and drop them into these paths.
+
+folders:
+  base: assets/pitches/inkline
+  renders: assets/pitches/inkline/renders
+  ui: assets/pitches/inkline/ui
+  refs: assets/pitches/inkline/refs
+  audio: assets/pitches/inkline/audio
+
+assets:
+  # --- Pitch / marketing ---
+  - id: IMG_HERO_SHOP_01
+    type: image
+    role: hero
+    path: assets/pitches/inkline/renders/HERO_inkline_shop_01.png
+    alt: "A gritty-but-warm tattoo shop interior with a focused artist at the chair."
+    prompt_hint: >
+      Cozy gritty tattoo booth, neon OPEN sign glow, sterile prep table,
+      clean linework vibe, cinematic lighting, 16:9, game key art.
+
+  - id: IMG_SCREEN_TATTOO_UI_01
+    type: image
+    role: screenshot_mock
+    path: assets/pitches/inkline/ui/UI_tattoo_station_01.png
+    alt: "Tattoo station view with pain meter and progress (0/3)."
+    prompt_hint: >
+      Minimal HUD: pain meter top-right, tattoos completed 0/3 top-left,
+      stencil overlay on skin, needle cursor, readable UI.
+
+  - id: IMG_SCREEN_STENCIL_01
+    type: image
+    role: screenshot_mock
+    path: assets/pitches/inkline/ui/UI_stencil_align_01.png
+    alt: "Stencil placement alignment step."
+    prompt_hint: >
+      Player aligning stencil on forearm, rotate/position ghosted stencil,
+      confirm button prompt.
+
+  - id: IMG_SCREEN_LINEWORK_01
+    type: image
+    role: screenshot_mock
+    path: assets/pitches/inkline/ui/UI_linework_trace_01.png
+    alt: "Linework tracing step with error feedback."
+    prompt_hint: >
+      Trace path on stencil; small deviation shows ink smear and subtle warning.
+
+  - id: IMG_SCREEN_AFTERCARE_01
+    type: image
+    role: screenshot_mock
+    path: assets/pitches/inkline/ui/UI_aftercare_wrap_01.png
+    alt: "Aftercare wrap step and job completion."
+    prompt_hint: >
+      Clean finish screen: aftercare wrap, stamp COMPLETE, tattoos completed increments.
+
+  # --- Characters (portraits for pitch + dialogue) ---
+  - id: CHR_ARTIST_SELF_01
+    type: image
+    role: character_portrait
+    path: assets/pitches/inkline/renders/CHR_artist_01.png
+    alt: "The player-character tattoo artist, calm and focused."
+    prompt_hint: >
+      Tattoo artist portrait, neutral expression, ink-stained gloves,
+      warm shop lighting, stylized realism.
+
+  - id: CHR_CLIENT_CASEY_01
+    type: image
+    role: character_portrait
+    path: assets/pitches/inkline/renders/CHR_client_casey_01.png
+    alt: "Casey, nervous first-timer client."
+    prompt_hint: >
+      Young adult, nervous smile, first tattoo energy, sleeves rolled up.
+
+  - id: CHR_CLIENT_MIGUEL_01
+    type: image
+    role: character_portrait
+    path: assets/pitches/inkline/renders/CHR_client_miguel_01.png
+    alt: "Miguel, tough client trying to act unfazed."
+    prompt_hint: >
+      Confident posture, athletic build, trying not to show pain,
+      tattoo flash in hand.
+
+  - id: CHR_CLIENT_LILA_01
+    type: image
+    role: character_portrait
+    path: assets/pitches/inkline/renders/CHR_client_lila_01.png
+    alt: "Lila, perfectionist artist client who notices everything."
+    prompt_hint: >
+      Art kid vibe, sharp eyes, subtle judgment, wants perfect lines.
+
+  # --- Audio (optional) ---
+  - id: SFX_NEEDLE_LOOP_01
+    type: audio
+    role: sfx
+    path: assets/pitches/inkline/audio/SFX_needle_loop_01.wav
+    alt: "Tattoo machine needle loop."
+
+  - id: SFX_WIPE_01
+    type: audio
+    role: sfx
+    path: assets/pitches/inkline/audio/SFX_wipe_01.wav
+    alt: "Wipe/cool action sound."
+
+  - id: SFX_PAIN_SPIKE_01
+    type: audio
+    role: sfx
+    path: assets/pitches/inkline/audio/SFX_pain_spike_01.wav
+    alt: "Short sting cue on mistake/pain spike."

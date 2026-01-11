@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inkline — Pitch One Pager - Pitch Pack</title>
+    <style>
+        :root {
+            --bg: #1a1a2e;
+            --fg: #eaeaea;
+            --accent: #00d9ff;
+            --border: #333;
+            --code-bg: #0f0f1a;
+        }
+        * { box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: var(--bg);
+            color: var(--fg);
+            line-height: 1.6;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        h1 {
+            color: var(--accent);
+            border-bottom: 2px solid var(--accent);
+            padding-bottom: 0.5rem;
+            margin-top: 3rem;
+        }
+        h1:first-child { margin-top: 0; }
+        h2 {
+            color: var(--accent);
+            margin-top: 2rem;
+        }
+        h3 { color: #888; }
+        a { color: var(--accent); }
+        code {
+            background: var(--code-bg);
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+        pre {
+            background: var(--code-bg);
+            padding: 1rem;
+            border-radius: 5px;
+            overflow-x: auto;
+            border: 1px solid var(--border);
+        }
+        pre code {
+            background: none;
+            padding: 0;
+        }
+        ul, ol {
+            padding-left: 1.5rem;
+        }
+        li {
+            margin-bottom: 0.5rem;
+        }
+        hr {
+            border: none;
+            border-top: 1px solid var(--border);
+            margin: 3rem 0;
+        }
+        .section-divider {
+            border-top: 3px solid var(--accent);
+            margin: 4rem 0 2rem 0;
+        }
+        .toc {
+            background: var(--code-bg);
+            padding: 1.5rem;
+            border-radius: 5px;
+            margin-bottom: 2rem;
+        }
+        .toc h2 {
+            margin-top: 0;
+            color: var(--fg);
+        }
+        .toc ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        .toc li {
+            margin-bottom: 0.3rem;
+        }
+        .print-note {
+            background: #2a2a4e;
+            padding: 1rem;
+            border-radius: 5px;
+            margin-top: 3rem;
+            font-size: 0.9em;
+        }
+        @media print {
+            body {
+                background: white;
+                color: black;
+                max-width: none;
+            }
+            h1, h2 { color: #333; }
+            .toc, .print-note { display: none; }
+            pre { border: 1px solid #ccc; }
+        }
+    </style>
+</head>
+<body>
+    <div class="toc">
+        <h2>Contents</h2>
+        <ul>
+            <li><a href="#pitch-one-pager">Pitch One Pager</a></li>
+            <li><a href="#slice-spec">Slice Spec</a></li>
+            <li><a href="#level-graph">Level Graph</a></li>
+            <li><a href="#build-tickets">Build Tickets</a></li>
+            <li><a href="#playtest-script">Playtest Script</a></li>
+            <li><a href="#presentation-brief">Presentation Brief</a></li>
+        </ul>
+    </div>
+<section id="pitch-one-pager">
+<h1>Inkline — Pitch One Pager</h1>
+
+<h2>Hook (1 sentence)</h2>
+<p>Run the needle, keep your hand steady, and finish three walk-in tattoos before your client’s pain tops out.</p>
+
+<h2>Player Fantasy</h2>
+<p>Be the calm, precise tattoo artist who can pull clean lines under pressure while reading the room and earning trust in a gritty little shop.</p>
+<p>You feel the satisfaction of “perfect linework” and the tension of one slip turning the session sideways.</p>
+
+<h2>Core Loop (10-15 min slice)</h2>
+<ul>
+<li>Greet the next walk-in and review a simple flash design (quick choice: small / medium / bold).</li>
+<li>Place the stencil on the body area (align + confirm).</li>
+<li>Tattoo the design: trace linework and add one pass of shading/fill.</li>
+<li>Manage the client’s pain by wiping/cooling at the right moments (and by not messing up).</li>
+<li>Finish, apply aftercare wrap, mark tattoo complete (progress + move to next client).</li>
+
+</ul>
+<h2>Differentiators</h2>
+<ul>
+<li>Tattooing as a <strong>precision skill game</strong>: linework feels tactile and “craft-like” without turning into a sim spreadsheet.</li>
+<li>A single rising <strong>Pain</strong> pressure meter creates real tension and forces smart pacing (wipe now vs push the line).</li>
+<li>Short, character-driven walk-ins: each client has a vibe, a boundary, and a reason they’re here—without long cutscenes.</li>
+
+</ul>
+<h2>Target Platform</h2>
+<p>PC (mouse) first, with controller support (Steam Deck friendly).</p>
+
+<h2>Comparables + Why We Win</h2>
+<ul>
+<li>*Papers, Please* (high-stakes work loop) + *PowerWash Simulator* (satisfying “clean completion”) energy, but with a tighter “don’t slip” skill core.</li>
+<li>We win by making the act of tattooing feel <strong>visceral and readable</strong> in under 15 minutes: trace, breathe, wipe, finish.</li>
+
+</ul>
+<h2>Scope Guardrails</h2>
+<ul>
+<li>No open world</li>
+<li>No economy/currency</li>
+<li>No crafting tree</li>
+<li>3-5 interactions max</li>
+<li>1 pressure system, 1 progress metric</li>
+
+</ul>
+</section>
+<div class="section-divider"></div>
+<section id="slice-spec">
+<h1>Inkline — Slice Spec (Vertical Slice Contract)</h1>
+
+<h2>Slice Goal</h2>
+<p>Complete three walk-in tattoos in a single shift, proving the tattooing interaction loop and the pain-pressure system end-to-end.</p>
+
+<h2>Start / End</h2>
+<ul>
+<li>Start: You unlock the shop, step into the booth, and the first client is ready in the chair.</li>
+<li>End: The third tattoo is finished, aftercare is applied, and the “Shift Complete” prompt triggers at the counter.</li>
+
+</ul>
+<h2>Objectives (Player-facing)</h2>
+<ul>
+<li>Complete Tattoo #1 (easy): stencil → linework → quick shade → aftercare.</li>
+<li>Complete Tattoo #2 (medium): slightly tighter linework, higher pain sensitivity.</li>
+<li>Complete Tattoo #3 (hard): longest trace path + higher mistake penalty.</li>
+<li>Finish all three before any client’s pain meter maxes out.</li>
+
+</ul>
+<h2>Pressure System (one)</h2>
+<p><strong>Client Pain Meter</strong></p>
+<ul>
+<li>Pain rises while the needle is active (linework/shading).</li>
+<li>Pain spikes when you deviate off-stencil or pause too long mid-stroke.</li>
+<li>Pain can be reduced slightly by using the wipe/cool interaction (limited relief, not a full reset).</li>
+<li>If pain maxes: client taps out → tattoo fails → slice fails.</li>
+
+</ul>
+<h2>Progress Metric (one)</h2>
+<p><strong>Tattoos Completed (0/3 → 3/3)</strong></p>
+
+<h2>Fail States</h2>
+<ul>
+<li>Client Pain Meter maxes out on any tattoo (client stops the session).</li>
+<li>Player abandons the chair mid-tattoo (walks away / cancels) → counts as fail for the slice.</li>
+
+</ul>
+<h2>In / Out of Scope</h2>
+<h3>In</h3>
+<ul>
+<li>One shop interior with 6 linked areas (front, desk, prep, two booths, aftercare/exit).</li>
+<li>Three tattoo “jobs,” each using the same 3–5 interaction types:</li>
+<li>Stencil placement (align/confirm)</li>
+<li>Linework trace (precision follow)</li>
+<li>Shading/fill pass (broader follow)</li>
+<li>Wipe/cool (pain relief)</li>
+<li>Finish/aftercare (commit completion)</li>
+<li>Minimal HUD: Pain meter + Tattoos Completed.</li>
+
+</ul>
+<h3>Out</h3>
+<ul>
+<li>Economy, vendors, skill trees, crafting systems</li>
+<li>Open world streaming</li>
+<li>Multiplayer</li>
+
+</ul>
+</section>
+<div class="section-divider"></div>
+<section id="level-graph">
+<h1>Inkline — Act 1 Level Graph</h1>
+
+<h2>Locations (6-10)</h2>
+<ul>
+<li>L01_StreetFront_SignAndDoor</li>
+<li>L02_WaitingRoom_FlashWall</li>
+<li>L03_FrontDesk_CheckIn</li>
+<li>L04_PrepStation_SterileSetup</li>
+<li>L05_BoothA_TheChair</li>
+<li>L06_AftercareCounter_ShiftEnd</li>
+
+</ul>
+<h2>Anchor Registry (minimum)</h2>
+<ul>
+<li>A_SPAWN_START</li>
+<li>A_CLIENT_01_READY</li>
+<li>A_CLIENT_02_READY</li>
+<li>A_CLIENT_03_READY</li>
+<li>A_EXIT_L01_TO_L02</li>
+<li>A_EXIT_L02_TO_L03</li>
+<li>A_EXIT_L03_TO_L04</li>
+<li>A_EXIT_L04_TO_L05</li>
+<li>A_EXIT_L05_TO_L06</li>
+<li>A_SLICE_END</li>
+
+</ul>
+<h2>Topology (Mermaid)</h2>
+<pre><code class="language-mermaid">
+graph TD
+  L01--&gt;L02
+  L02--&gt;L03
+  L03--&gt;L04
+  L04--&gt;L05
+  L05--&gt;L06
+
+</section>
+<div class="section-divider"></div>
+<section id="build-tickets">
+
+<hr>
+
+<h2>`BUILD_TICKETS.md`</h2>
+
+<pre><code class="language-md">
+# Inkline — Build Tickets (Ordered)
+
+## T01 — Slice Skeleton
+**DoD**
+- Shop map exists with 6 locations and simple navigation start→end
+- Player can move between areas and reach the tattoo chair
+- “Client ready” state gates the chair interaction (no chair = no job)
+
+## T02 — Interactions (3–5 max)
+**DoD**
+- Stencil Placement: align + confirm on a body zone (simple rotate/position)
+- Linework Trace: follow a stencil path with error detection
+- Shading/Fill: second pass with wider tolerance but longer exposure
+- Wipe/Cool: short interaction that reduces pain slightly
+- Finish/Aftercare: commits job completion and advances to next client
+
+## T03 — Pressure System (one meter)
+**DoD**
+- Pain meter rises during needle-active states
+- Pain spikes on trace errors and on long pauses mid-stroke
+- Wipe/Cool reduces pain by a fixed amount with a brief cooldown
+- Clear fail when pain hits max (client stops session, retry prompt)
+
+## T04 — Progress Metric (one meter)
+**DoD**
+- Tattoos Completed increments on successful aftercare completion
+- Gate next client spawn/availability off progress (0/3, 1/3, 2/3, 3/3)
+- End condition triggers at 3/3 and activates A_SLICE_END
+
+## T05 — Playtest Support
+**DoD**
+- Debug buttons: reset current tattoo / reset full shift
+- Minimal HUD: Pain meter + Tattoos Completed + current client label
+- Quick-run mode that skips walking and jumps to chair for rapid iteration
+
+</section>
+<div class="section-divider"></div>
+<section id="playtest-script">
+<h1>Inkline — Playtest Script (10–15 min)</h1>
+
+<h2>Setup</h2>
+<p><strong>Goal:</strong> Validate the core loop feels satisfying and the Pain pressure creates real decisions across 3 tattoos.</p>
+
+<p><strong>Build / Mode</strong></p>
+<ul>
+<li>Build: Vertical Slice (Inkline / pack: `inkline`)</li>
+<li>Input: Mouse (recommended), optional controller</li>
+<li>Audio: ON (needle + pain spike cues are part of feedback)</li>
+
+</ul>
+<p><strong>Start State</strong></p>
+<ul>
+<li>Player starts at <strong>L01_StreetFront_SignAndDoor</strong></li>
+<li><strong>Tattoos Completed = 0/3</strong></li>
+<li><strong>Pain meter = 0</strong></li>
+<li>Client #1 is available immediately at the chair after check-in</li>
+
+</ul>
+<p><strong>Tester Instructions</strong></p>
+<ul>
+<li>Play “as intended” on Client #1</li>
+<li>On Client #2, deliberately make 1–2 small mistakes to test pain spikes + recovery</li>
+<li>On Client #3, try to finish without wipe/cool unless pain forces it</li>
+
+</ul>
+<p><strong>What to Record</strong></p>
+<ul>
+<li>Time to complete each tattoo</li>
+<li>Number of trace mistakes per tattoo</li>
+<li>How often wipe/cool is used</li>
+<li>Where the player felt confused or unfairly punished</li>
+
+</ul>
+<h2>Step-by-step Run</h2>
+<ol>
+<li>Enter the shop and reach the front desk area (L01 → L02 → L03).</li>
+<li>Confirm <strong>Client #1</strong> is ready and proceed to the chair (L05).</li>
+<li><strong>Stencil Placement:</strong> align the stencil on the target zone and confirm.</li>
+<li><strong>Linework:</strong> trace the stencil path until linework completes.</li>
+<li><strong>Shading/Fill:</strong> complete the shading pass (broader tolerance, longer needle time).</li>
+<li>Use <strong>Wipe/Cool</strong> once (even if not needed) to confirm it reduces pain and has a cooldown.</li>
+<li><strong>Finish/Aftercare:</strong> commit completion and confirm <strong>Tattoos Completed becomes 1/3</strong>.</li>
+<li>Trigger <strong>Client #2</strong> availability and begin the second tattoo at the chair.</li>
+<li>During Client #2 linework, intentionally deviate off the line 1–2 times:</li>
+<li>confirm <strong>pain spike</strong> feedback (audio/visual)</li>
+<li>confirm the mistake does not instantly fail you, but meaningfully pressures you</li>
+<li>Use wipe/cool strategically to stabilize pain, then finish Client #2.</li>
+<li>Confirm <strong>Tattoos Completed becomes 2/3</strong> and <strong>Client #3</strong> becomes available.</li>
+<li>Start Client #3 and attempt to complete with minimal wipe/cool:</li>
+<li>if pain reaches ~75%, use wipe/cool and continue</li>
+<li>Finish Client #3 and confirm <strong>Tattoos Completed becomes 3/3</strong>.</li>
+<li>Proceed to the aftercare/shift-end area (L06) and confirm the slice ends at <strong>A_SLICE_END</strong>.</li>
+
+</ol>
+<h2>Expected Outcomes</h2>
+<ul>
+<li>The player can complete all 3 tattoos in ~10–15 minutes on a first run (with 1–2 retries acceptable).</li>
+<li><strong>Pain meter behavior is consistent:</strong></li>
+<li>rises while needle is active</li>
+<li>spikes on mistakes and long hesitation mid-stroke</li>
+<li>reduces by a fixed amount when wipe/cool is used (not a full reset)</li>
+<li><strong>Failure is clean and readable:</strong></li>
+<li>when pain maxes, the client stops the session</li>
+<li>the game clearly communicates why the failure happened</li>
+<li><strong>Progress is correct:</strong></li>
+<li>Tattoos Completed increments only after aftercare completion</li>
+<li>the next client gates correctly off the progress counter</li>
+<li>slice ends only at 3/3 and triggers the end prompt reliably</li>
+<li>The core action feels “satisfying under pressure,” not random or overly punishing.</li>
+
+</ul>
+<h2>Bug Buckets</h2>
+<ul>
+<li><strong>Blocker:</strong> Cannot finish tattoo / cannot progress clients / end never triggers</li>
+<li><strong>Major:</strong> Pain meter wrong, wipe/cool doesn’t work, progress increments incorrectly</li>
+<li><strong>Minor:</strong> UI clarity, text polish, missing feedback, small animation/audio issues</li>
+
+</ul>
+<h2>Post-Run Questions (ask the tester)</h2>
+<ol>
+<li>Did the linework feel fair (forgiveness) and satisfying (feedback)?</li>
+<li>Did you understand why pain spiked when it did?</li>
+<li>Did wipe/cool feel like a meaningful decision or a mandatory spam button?</li>
+<li>Where did you feel annoyed or “cheated” by the system?</li>
+<li>Would you play “one more tattoo” after finishing the third?</li>
+
+</ol>
+</section>
+<div class="section-divider"></div>
+<section id="presentation-brief">
+<h1>Inkline — Presentation Brief</h1>
+
+<h2>Audience</h2>
+<ul>
+<li>Indie investors / small publishers</li>
+<li>Vertical-slice collaborators (programmer + artist)</li>
+<li>Streamers who like satisfying skill loops</li>
+
+</ul>
+<h2>30-Second Pitch</h2>
+<p>Inkline is a tattoo-parlor precision game: pull clean lines, manage client pain, and finish three walk-ins in one shift. It’s satisfying when you nail it—and tense when you don’t.</p>
+
+<h2>2-Minute Talk Track</h2>
+<p>You play a tattoo artist on a busy walk-in shift. Each tattoo is the same tight loop: stencil placement, linework, quick shading, aftercare. The pressure system is a single Pain meter—mistakes and hesitation spike it, wiping/cooling buys you a little space, and if it maxes the client taps out and you fail the slice. The slice proves the core feel: the “needle” interaction is tactile, readable, and repeatable. Three clients ramp difficulty so we can test tuning quickly. No sim bloat—just one clean loop with tension.</p>
+
+<h2>Core Loop (One Sentence)</h2>
+<p>Stencil → trace lines → shade → wipe/cool to manage pain → aftercare → repeat for 3 clients.</p>
+
+<h2>What We Are NOT Doing</h2>
+<ul>
+<li>No long-run management sim systems</li>
+<li>No shop decorating progression for the slice</li>
+<li>No sprawling feature pile beyond the tattoo loop</li>
+
+</ul>
+<h2>Playtest Goals</h2>
+<ul>
+<li>Does linework feel fair (forgiveness) and satisfying (feedback)?</li>
+<li>Is pain pressure readable and does it create real decisions?</li>
+<li>Can a new player finish in ~12 minutes without a tutorial wall?</li>
+
+</ul>
+<h2>Ask / Next Step</h2>
+<p>Greenlight a 1–2 week prototype sprint to validate “linework feel,” pain tuning, and one polished booth scene with three client jobs.</p>
+
+</section>
+    <div class="print-note">
+        <strong>Export to PDF:</strong> Use your browser's Print function (Ctrl+P / Cmd+P) and select "Save as PDF".
+    </div>
+</body>
+</html>
