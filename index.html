@@ -1,0 +1,1228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inkline - Tattoo Artist Prototype</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #1a1a2e;
+            color: #eee;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow: hidden;
+        }
+        #game-container {
+            width: 900px;
+            height: 700px;
+            background: #16213e;
+            border: 2px solid #0f3460;
+            border-radius: 8px;
+            position: relative;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+        /* HUD */
+        #hud {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: rgba(0,0,0,0.8);
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            gap: 30px;
+            z-index: 100;
+        }
+        .hud-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .hud-label {
+            font-size: 11px;
+            color: #888;
+            text-transform: uppercase;
+        }
+        .hud-value {
+            font-size: 16px;
+            font-weight: bold;
+        }
+        #pain-bar-container {
+            width: 200px;
+            height: 20px;
+            background: #333;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        #pain-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #4ade80, #facc15, #ef4444);
+            transition: width 0.1s;
+        }
+        #pain-value { color: #ef4444; }
+        #tattoos-value { color: #4ade80; }
+        #client-name { color: #60a5fa; }
+        /* Debug Panel */
+        #debug-panel {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            display: flex;
+            gap: 8px;
+            z-index: 100;
+        }
+        .debug-btn {
+            padding: 6px 12px;
+            background: #374151;
+            border: 1px solid #4b5563;
+            color: #9ca3af;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 11px;
+        }
+        .debug-btn:hover { background: #4b5563; color: #fff; }
+        .debug-btn.active { background: #059669; color: #fff; border-color: #10b981; }
+        /* Screens */
+        .screen {
+            display: none;
+            position: absolute;
+            top: 60px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .screen.active { display: flex; }
+        .screen-title {
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: #f472b6;
+        }
+        .screen-subtitle {
+            font-size: 16px;
+            color: #9ca3af;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .btn {
+            padding: 12px 30px;
+            background: #7c3aed;
+            border: none;
+            color: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 8px;
+            transition: all 0.2s;
+        }
+        .btn:hover { background: #8b5cf6; transform: scale(1.05); }
+        .btn:disabled { background: #4b5563; cursor: not-allowed; transform: none; }
+        /* Dialogue Box */
+        #dialogue-box {
+            position: absolute;
+            bottom: 60px;
+            left: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.9);
+            border: 2px solid #7c3aed;
+            border-radius: 8px;
+            padding: 15px 20px;
+            display: none;
+            z-index: 90;
+        }
+        #dialogue-box.visible { display: block; }
+        #dialogue-speaker {
+            font-weight: bold;
+            color: #f472b6;
+            margin-bottom: 8px;
+        }
+        #dialogue-text {
+            color: #e5e7eb;
+            line-height: 1.5;
+        }
+        #dialogue-continue {
+            position: absolute;
+            bottom: 10px;
+            right: 15px;
+            color: #9ca3af;
+            font-size: 12px;
+            animation: blink 1s infinite;
+        }
+        @keyframes blink { 50% { opacity: 0.3; } }
+        /* Bark (quick dialogue) */
+        #bark-box {
+            position: absolute;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(239, 68, 68, 0.9);
+            border-radius: 6px;
+            padding: 10px 20px;
+            display: none;
+            z-index: 95;
+            max-width: 400px;
+            text-align: center;
+        }
+        #bark-box.visible { display: block; }
+        #bark-speaker { font-weight: bold; color: #fecaca; }
+        #bark-text { color: #fff; }
+        /* Tattoo Canvas Area */
+        #tattoo-area {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+        #tattoo-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            cursor: crosshair;
+        }
+        /* Phase indicator */
+        #phase-indicator {
+            position: absolute;
+            top: 80px;
+            left: 20px;
+            background: rgba(0,0,0,0.8);
+            padding: 10px 15px;
+            border-radius: 6px;
+            z-index: 80;
+        }
+        #phase-name { font-weight: bold; color: #60a5fa; font-size: 14px; }
+        #phase-instruction { color: #9ca3af; font-size: 12px; margin-top: 4px; }
+        /* Progress bar for current phase */
+        #progress-container {
+            position: absolute;
+            top: 140px;
+            left: 20px;
+            width: 150px;
+            z-index: 80;
+        }
+        #progress-label { font-size: 11px; color: #888; margin-bottom: 4px; }
+        #progress-bar-bg {
+            width: 100%;
+            height: 8px;
+            background: #333;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        #progress-bar {
+            height: 100%;
+            width: 0%;
+            background: #60a5fa;
+            transition: width 0.05s;
+        }
+        /* Wipe button */
+        #wipe-btn {
+            position: absolute;
+            bottom: 80px;
+            left: 20px;
+            padding: 10px 20px;
+            background: #0891b2;
+            border: none;
+            color: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            z-index: 80;
+        }
+        #wipe-btn:disabled { background: #4b5563; cursor: not-allowed; }
+        #wipe-btn:hover:not(:disabled) { background: #06b6d4; }
+        #wipe-cooldown {
+            font-size: 11px;
+            color: #9ca3af;
+            margin-top: 4px;
+        }
+        /* Needle indicator */
+        #needle-indicator {
+            position: absolute;
+            bottom: 80px;
+            right: 20px;
+            padding: 10px 20px;
+            background: #374151;
+            border-radius: 6px;
+            z-index: 80;
+        }
+        #needle-indicator.active { background: #dc2626; }
+        /* Stencil ghost */
+        #stencil-ghost {
+            position: absolute;
+            pointer-events: none;
+            opacity: 0.6;
+            z-index: 50;
+        }
+        /* Flash overlay for mistakes */
+        #flash-overlay {
+            position: absolute;
+            top: 60px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(239, 68, 68, 0.3);
+            pointer-events: none;
+            opacity: 0;
+            z-index: 85;
+            transition: opacity 0.1s;
+        }
+        #flash-overlay.flash { opacity: 1; }
+        /* Cooling overlay */
+        #cooling-overlay {
+            position: absolute;
+            top: 60px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(6, 182, 212, 0.3);
+            pointer-events: none;
+            opacity: 0;
+            z-index: 85;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: #06b6d4;
+        }
+        #cooling-overlay.visible { opacity: 1; }
+        /* Location visual */
+        .location-bg {
+            position: absolute;
+            top: 60px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding-top: 40px;
+        }
+        .location-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <!-- HUD -->
+        <div id="hud">
+            <div class="hud-item">
+                <span class="hud-label">Pain</span>
+                <div id="pain-bar-container">
+                    <div id="pain-bar"></div>
+                </div>
+            </div>
+            <div class="hud-item">
+                <span class="hud-label">Pain Level</span>
+                <span id="pain-value" class="hud-value">0</span>
+            </div>
+            <div class="hud-item">
+                <span class="hud-label">Tattoos</span>
+                <span id="tattoos-value" class="hud-value">0/3</span>
+            </div>
+            <div class="hud-item">
+                <span class="hud-label">Client</span>
+                <span id="client-name" class="hud-value">---</span>
+            </div>
+            <div class="hud-item">
+                <span class="hud-label">Location</span>
+                <span id="location-name" class="hud-value">---</span>
+            </div>
+        </div>
+
+        <!-- Screens -->
+        <!-- Title / Street Front -->
+        <div id="screen-street" class="screen active">
+            <div class="location-icon">🏪</div>
+            <h1 class="screen-title">INKLINE</h1>
+            <p class="screen-subtitle">A precision skill game about being a tattoo artist.<br>Complete 3 tattoos in one shift. Don't let the pain meter max out.</p>
+            <button class="btn" onclick="game.enterShop()">Enter Shop</button>
+        </div>
+
+        <!-- Waiting Room -->
+        <div id="screen-waiting" class="screen">
+            <div class="location-icon">🪑</div>
+            <h1 class="screen-title">Waiting Room</h1>
+            <p class="screen-subtitle" id="waiting-text">A client is waiting for you.</p>
+            <button class="btn" onclick="game.goToFrontDesk()">Go to Front Desk</button>
+        </div>
+
+        <!-- Front Desk / Check-in -->
+        <div id="screen-frontdesk" class="screen">
+            <div class="location-icon">📋</div>
+            <h1 class="screen-title">Front Desk</h1>
+            <p class="screen-subtitle" id="frontdesk-text">Check in your client.</p>
+            <button class="btn" id="checkin-btn" onclick="game.startCheckinDialogue()">Check In Client</button>
+        </div>
+
+        <!-- Prep Station -->
+        <div id="screen-prep" class="screen">
+            <div class="location-icon">🧴</div>
+            <h1 class="screen-title">Prep Station</h1>
+            <p class="screen-subtitle">Equipment sterilized. Ink prepped. Ready to work.</p>
+            <button class="btn" onclick="game.goToBooth()">Head to the Chair</button>
+        </div>
+
+        <!-- Booth / Chair (main gameplay) -->
+        <div id="screen-booth" class="screen">
+            <div id="tattoo-area">
+                <canvas id="tattoo-canvas"></canvas>
+            </div>
+            <div id="phase-indicator">
+                <div id="phase-name">Stencil Placement</div>
+                <div id="phase-instruction">Click and drag to position. Press SPACE to confirm.</div>
+            </div>
+            <div id="progress-container">
+                <div id="progress-label">Progress</div>
+                <div id="progress-bar-bg">
+                    <div id="progress-bar"></div>
+                </div>
+            </div>
+            <button id="wipe-btn" onclick="game.wipe()">Wipe / Cool</button>
+            <div id="needle-indicator">Needle: OFF</div>
+            <div id="flash-overlay"></div>
+            <div id="cooling-overlay">Cooling...</div>
+        </div>
+
+        <!-- Aftercare Counter -->
+        <div id="screen-aftercare" class="screen">
+            <div class="location-icon">🩹</div>
+            <h1 class="screen-title">Aftercare Counter</h1>
+            <p class="screen-subtitle" id="aftercare-text">Tattoo complete! Apply aftercare.</p>
+            <button class="btn" id="aftercare-btn" onclick="game.finishAftercareDialogue()">Apply Aftercare</button>
+        </div>
+
+        <!-- Shift Complete -->
+        <div id="screen-complete" class="screen">
+            <div class="location-icon">🎉</div>
+            <h1 class="screen-title">Shift Complete!</h1>
+            <p class="screen-subtitle">You completed all 3 tattoos. Great work, artist.</p>
+            <button class="btn" onclick="game.resetShift()">Start New Shift</button>
+        </div>
+
+        <!-- Fail Screen -->
+        <div id="screen-fail" class="screen">
+            <div class="location-icon">😰</div>
+            <h1 class="screen-title" style="color: #ef4444;">Client Tapped Out</h1>
+            <p class="screen-subtitle" id="fail-text">The pain was too much. The client couldn't continue.</p>
+            <button class="btn" onclick="game.retryTattoo()">Retry This Tattoo</button>
+            <button class="btn" onclick="game.resetShift()">Reset Shift</button>
+        </div>
+
+        <!-- Dialogue Box -->
+        <div id="dialogue-box">
+            <div id="dialogue-speaker"></div>
+            <div id="dialogue-text"></div>
+            <div id="dialogue-continue">Click to continue...</div>
+        </div>
+
+        <!-- Bark Box -->
+        <div id="bark-box">
+            <span id="bark-speaker"></span>: <span id="bark-text"></span>
+        </div>
+
+        <!-- Debug Panel -->
+        <div id="debug-panel">
+            <button class="debug-btn" onclick="game.resetCurrentTattoo()">Reset Tattoo</button>
+            <button class="debug-btn" onclick="game.resetShift()">Reset Shift</button>
+            <button class="debug-btn" id="quick-run-btn" onclick="game.toggleQuickRun()">Quick Run: OFF</button>
+        </div>
+    </div>
+
+    <script>
+// ============================================
+// INKLINE - Tattoo Artist Prototype
+// ============================================
+
+const DIALOGUE = {
+    CASEY: {
+        checkin: [
+            { speaker: "Casey", text: "Hey... so, I'm not gonna pass out, right?" },
+            { speaker: "Artist", text: "Not if you breathe and stay still. We'll go slow." },
+            { speaker: "Casey", text: "Small flash. Something clean. No regrets." }
+        ],
+        chairStart: [
+            { speaker: "Artist", text: "Stencil goes on first. Tell me if the placement feels off." },
+            { speaker: "Casey", text: "Okay. Yeah. That... actually looks perfect." },
+            { speaker: "Artist", text: "Cool. Once we start, the more steady you are, the easier it is." }
+        ],
+        barks: {
+            pain25: { speaker: "Casey", text: "That's... spicy. But I'm good." },
+            pain50: { speaker: "Casey", text: "Whew—okay—yeah, I felt that." },
+            pain75: { speaker: "Casey", text: "I need a second. Please." },
+            mistake: { speaker: "Casey", text: "Was that... supposed to feel like that?" }
+        },
+        finish: [
+            { speaker: "Casey", text: "I did it. I'm officially one of those people now." },
+            { speaker: "Artist", text: "Keep it clean. Don't pick at it. You'll heal fine." },
+            { speaker: "Casey", text: "Worth it. That line is so crisp." }
+        ]
+    },
+    MIGUEL: {
+        checkin: [
+            { speaker: "Miguel", text: "Let's not make this a whole thing. Medium flash. Bold lines." },
+            { speaker: "Artist", text: "Bold is fine. Just means you'll feel it longer." },
+            { speaker: "Miguel", text: "I'm not worried." }
+        ],
+        chairStart: [
+            { speaker: "Artist", text: "If you tense up, the line gets harder to control." },
+            { speaker: "Miguel", text: "Got it. I'll be stone." }
+        ],
+        barks: {
+            pain25: { speaker: "Miguel", text: "Yeah. That's fine." },
+            pain50: { speaker: "Miguel", text: "Okay—okay. Still fine." },
+            pain75: { speaker: "Miguel", text: "...Wipe it. Just wipe it." },
+            mistake: { speaker: "Miguel", text: "That one bit. Don't do that one again." }
+        },
+        finish: [
+            { speaker: "Miguel", text: "Looks tough. I respect it." },
+            { speaker: "Artist", text: "Follow aftercare and it'll stay sharp." },
+            { speaker: "Miguel", text: "Yeah. Yeah. I'll take care of it." }
+        ]
+    },
+    LILA: {
+        checkin: [
+            { speaker: "Lila", text: "I want clean linework. If it wobbles, I'll see it forever." },
+            { speaker: "Artist", text: "Then we do it slow and exact. You stay still, I stay steady." },
+            { speaker: "Lila", text: "Good. No hero moves." }
+        ],
+        chairStart: [
+            { speaker: "Artist", text: "Last one of the shift. We finish strong." },
+            { speaker: "Lila", text: "Strong is fine. Precise is better." }
+        ],
+        barks: {
+            pain25: { speaker: "Lila", text: "Keep your pace. Don't rush the corners." },
+            pain50: { speaker: "Lila", text: "Wipe. Now. Don't let the ink pool." },
+            pain75: { speaker: "Lila", text: "Stop. Breathe. Then continue." },
+            mistake: { speaker: "Lila", text: "That was off. Fix it before it sets." }
+        },
+        finish: [
+            { speaker: "Lila", text: "Okay... yeah. That's clean." },
+            { speaker: "Artist", text: "That's the goal. Sharp heals sharp." },
+            { speaker: "Lila", text: "You earned your chair tonight." }
+        ]
+    }
+};
+
+// Client configs with difficulty settings
+const CLIENTS = [
+    {
+        name: "Casey",
+        dialogueKey: "CASEY",
+        difficulty: "easy",
+        painRate: 3,           // Pain per second while needle active
+        mistakePenalty: 8,     // Pain spike on mistake
+        hesitationThreshold: 2, // Seconds before hesitation penalty
+        hesitationPenalty: 5,   // Extra pain per hesitation tick
+        tolerance: 25,          // Pixel tolerance for linework
+        shadingTolerance: 40,
+        // Simple design path (fewer points)
+        linePath: [
+            {x: 350, y: 250}, {x: 400, y: 200}, {x: 450, y: 220},
+            {x: 480, y: 280}, {x: 450, y: 340}, {x: 400, y: 360},
+            {x: 350, y: 340}, {x: 320, y: 280}, {x: 350, y: 250}
+        ],
+        shadePath: [
+            {x: 370, y: 270}, {x: 400, y: 250}, {x: 430, y: 270},
+            {x: 430, y: 310}, {x: 400, y: 330}, {x: 370, y: 310}, {x: 370, y: 270}
+        ]
+    },
+    {
+        name: "Miguel",
+        dialogueKey: "MIGUEL",
+        difficulty: "medium",
+        painRate: 5,
+        mistakePenalty: 12,
+        hesitationThreshold: 1.5,
+        hesitationPenalty: 7,
+        tolerance: 20,
+        shadingTolerance: 35,
+        // Medium design (more points, some angles)
+        linePath: [
+            {x: 300, y: 200}, {x: 350, y: 180}, {x: 400, y: 170}, {x: 450, y: 180},
+            {x: 500, y: 200}, {x: 520, y: 260}, {x: 500, y: 320}, {x: 450, y: 360},
+            {x: 400, y: 380}, {x: 350, y: 360}, {x: 300, y: 320}, {x: 280, y: 260},
+            {x: 300, y: 200}
+        ],
+        shadePath: [
+            {x: 340, y: 240}, {x: 400, y: 220}, {x: 460, y: 240},
+            {x: 480, y: 290}, {x: 460, y: 340}, {x: 400, y: 360},
+            {x: 340, y: 340}, {x: 320, y: 290}, {x: 340, y: 240}
+        ]
+    },
+    {
+        name: "Lila",
+        dialogueKey: "LILA",
+        difficulty: "hard",
+        painRate: 7,
+        mistakePenalty: 15,
+        hesitationThreshold: 1,
+        hesitationPenalty: 10,
+        tolerance: 15,
+        shadingTolerance: 28,
+        // Complex design (many points, tight curves)
+        linePath: [
+            {x: 280, y: 180}, {x: 320, y: 160}, {x: 370, y: 150}, {x: 420, y: 150},
+            {x: 470, y: 160}, {x: 510, y: 180}, {x: 540, y: 220}, {x: 550, y: 270},
+            {x: 540, y: 320}, {x: 510, y: 360}, {x: 470, y: 390}, {x: 420, y: 400},
+            {x: 370, y: 400}, {x: 320, y: 390}, {x: 280, y: 360}, {x: 250, y: 320},
+            {x: 240, y: 270}, {x: 250, y: 220}, {x: 280, y: 180}
+        ],
+        shadePath: [
+            {x: 310, y: 220}, {x: 360, y: 200}, {x: 420, y: 195}, {x: 480, y: 210},
+            {x: 510, y: 260}, {x: 500, y: 320}, {x: 460, y: 360}, {x: 400, y: 375},
+            {x: 340, y: 360}, {x: 300, y: 320}, {x: 290, y: 270}, {x: 310, y: 220}
+        ]
+    }
+];
+
+class Game {
+    constructor() {
+        this.canvas = document.getElementById('tattoo-canvas');
+        this.ctx = this.canvas.getContext('2d');
+        this.resizeCanvas();
+
+        this.tattoosCompleted = 0;
+        this.currentClientIndex = 0;
+        this.pain = 0;
+        this.quickRunMode = false;
+
+        // Tattoo state
+        this.phase = 'none'; // stencil, linework, shading, aftercare
+        this.stencilPosition = { x: 400, y: 300 };
+        this.stencilConfirmed = false;
+        this.lineProgress = 0;
+        this.shadeProgress = 0;
+        this.needleActive = false;
+        this.lastMoveTime = Date.now();
+        this.wipeCooldown = 0;
+        this.isCooling = false;
+
+        // Pain threshold tracking for barks
+        this.pain25Triggered = false;
+        this.pain50Triggered = false;
+        this.pain75Triggered = false;
+
+        // Dialogue state
+        this.dialogueQueue = [];
+        this.dialogueActive = false;
+        this.dialogueCallback = null;
+
+        // Bark timeout
+        this.barkTimeout = null;
+
+        this.setupEventListeners();
+        this.gameLoop();
+
+        this.updateHUD();
+        this.showScreen('street');
+    }
+
+    resizeCanvas() {
+        this.canvas.width = 900;
+        this.canvas.height = 640;
+    }
+
+    get currentClient() {
+        return CLIENTS[this.currentClientIndex];
+    }
+
+    get currentDialogue() {
+        return DIALOGUE[this.currentClient.dialogueKey];
+    }
+
+    setupEventListeners() {
+        // Mouse events for tattoo interaction
+        this.canvas.addEventListener('mousedown', (e) => this.onMouseDown(e));
+        this.canvas.addEventListener('mouseup', (e) => this.onMouseUp(e));
+        this.canvas.addEventListener('mousemove', (e) => this.onMouseMove(e));
+        this.canvas.addEventListener('mouseleave', () => this.needleActive = false);
+
+        // Keyboard events
+        document.addEventListener('keydown', (e) => this.onKeyDown(e));
+
+        // Dialogue click
+        document.getElementById('dialogue-box').addEventListener('click', () => this.advanceDialogue());
+    }
+
+    onMouseDown(e) {
+        if (this.isCooling || this.dialogueActive) return;
+
+        const rect = this.canvas.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        if (this.phase === 'stencil') {
+            // Start dragging stencil
+            this.draggingStencil = true;
+        } else if (this.phase === 'linework' || this.phase === 'shading') {
+            this.needleActive = true;
+            this.lastMoveTime = Date.now();
+            this.updateNeedleIndicator();
+        }
+    }
+
+    onMouseUp(e) {
+        this.draggingStencil = false;
+        if (this.phase === 'linework' || this.phase === 'shading') {
+            this.needleActive = false;
+            this.updateNeedleIndicator();
+        }
+    }
+
+    onMouseMove(e) {
+        const rect = this.canvas.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        this.mouseX = x;
+        this.mouseY = y;
+
+        if (this.phase === 'stencil' && this.draggingStencil) {
+            this.stencilPosition = { x, y };
+        }
+
+        if (this.needleActive) {
+            this.lastMoveTime = Date.now();
+        }
+    }
+
+    onKeyDown(e) {
+        if (e.code === 'Space') {
+            e.preventDefault();
+            if (this.phase === 'stencil' && !this.stencilConfirmed) {
+                this.confirmStencil();
+            }
+        }
+        if (e.code === 'KeyW') {
+            this.wipe();
+        }
+    }
+
+    // Screen management
+    showScreen(screenId) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById(`screen-${screenId}`).classList.add('active');
+
+        const locationNames = {
+            'street': 'Street Front',
+            'waiting': 'Waiting Room',
+            'frontdesk': 'Front Desk',
+            'prep': 'Prep Station',
+            'booth': 'The Chair',
+            'aftercare': 'Aftercare',
+            'complete': 'Shift End',
+            'fail': 'Failed'
+        };
+        document.getElementById('location-name').textContent = locationNames[screenId] || '---';
+    }
+
+    // Game flow
+    enterShop() {
+        this.showScreen('waiting');
+        document.getElementById('waiting-text').textContent =
+            `${this.currentClient.name} is waiting for their appointment.`;
+    }
+
+    goToFrontDesk() {
+        this.showScreen('frontdesk');
+        document.getElementById('frontdesk-text').textContent =
+            `${this.currentClient.name} - ${this.currentClient.difficulty.toUpperCase()} difficulty`;
+    }
+
+    startCheckinDialogue() {
+        this.showDialogue(this.currentDialogue.checkin, () => {
+            this.showScreen('prep');
+        });
+    }
+
+    goToBooth() {
+        if (this.quickRunMode) {
+            this.startTattoo();
+        } else {
+            this.showScreen('booth');
+            this.showDialogue(this.currentDialogue.chairStart, () => {
+                this.startTattoo();
+            });
+        }
+    }
+
+    startTattoo() {
+        this.showScreen('booth');
+        this.phase = 'stencil';
+        this.stencilConfirmed = false;
+        this.lineProgress = 0;
+        this.shadeProgress = 0;
+        this.pain = 0;
+        this.pain25Triggered = false;
+        this.pain50Triggered = false;
+        this.pain75Triggered = false;
+        this.stencilPosition = { x: 400, y: 300 };
+        this.updatePhaseUI();
+        this.updateHUD();
+    }
+
+    confirmStencil() {
+        this.stencilConfirmed = true;
+        this.phase = 'linework';
+        this.updatePhaseUI();
+    }
+
+    updatePhaseUI() {
+        const phaseEl = document.getElementById('phase-name');
+        const instrEl = document.getElementById('phase-instruction');
+
+        switch (this.phase) {
+            case 'stencil':
+                phaseEl.textContent = 'Stencil Placement';
+                instrEl.textContent = 'Drag to position. Press SPACE to confirm.';
+                break;
+            case 'linework':
+                phaseEl.textContent = 'Linework';
+                instrEl.textContent = 'Hold mouse button and trace the outline carefully.';
+                break;
+            case 'shading':
+                phaseEl.textContent = 'Shading';
+                instrEl.textContent = 'Hold mouse button and fill the interior.';
+                break;
+        }
+    }
+
+    updateNeedleIndicator() {
+        const el = document.getElementById('needle-indicator');
+        if (this.needleActive) {
+            el.textContent = 'Needle: ON';
+            el.classList.add('active');
+        } else {
+            el.textContent = 'Needle: OFF';
+            el.classList.remove('active');
+        }
+    }
+
+    // Wipe/Cool mechanic
+    wipe() {
+        if (this.wipeCooldown > 0 || this.isCooling) return;
+        if (this.phase !== 'linework' && this.phase !== 'shading') return;
+
+        this.isCooling = true;
+        this.needleActive = false;
+        this.updateNeedleIndicator();
+
+        document.getElementById('cooling-overlay').classList.add('visible');
+
+        setTimeout(() => {
+            this.pain = Math.max(0, this.pain - 15);
+            this.isCooling = false;
+            this.wipeCooldown = 6;
+            document.getElementById('cooling-overlay').classList.remove('visible');
+            this.updateHUD();
+        }, 1000);
+    }
+
+    // Pain and progress logic
+    gameLoop() {
+        const now = Date.now();
+        const dt = 1/60; // Assume ~60fps
+
+        // Update wipe cooldown
+        if (this.wipeCooldown > 0) {
+            this.wipeCooldown -= dt;
+        }
+        document.getElementById('wipe-btn').disabled = this.wipeCooldown > 0 || this.isCooling;
+
+        if (this.phase === 'linework' || this.phase === 'shading') {
+            if (this.needleActive && !this.isCooling) {
+                // Continuous pain increase
+                this.pain += this.currentClient.painRate * dt;
+
+                // Check hesitation
+                const timeSinceMove = (now - this.lastMoveTime) / 1000;
+                if (timeSinceMove > this.currentClient.hesitationThreshold) {
+                    this.pain += this.currentClient.hesitationPenalty * dt;
+                }
+
+                // Check path following
+                this.checkPathProgress();
+            }
+
+            // Check pain thresholds for barks
+            this.checkPainBarks();
+
+            // Check failure
+            if (this.pain >= 100) {
+                this.failTattoo();
+            }
+
+            this.updateHUD();
+        }
+
+        this.render();
+        requestAnimationFrame(() => this.gameLoop());
+    }
+
+    checkPathProgress() {
+        if (!this.mouseX || !this.mouseY) return;
+
+        const path = this.phase === 'linework' ? this.currentClient.linePath : this.currentClient.shadePath;
+        const tolerance = this.phase === 'linework' ? this.currentClient.tolerance : this.currentClient.shadingTolerance;
+        const progress = this.phase === 'linework' ? this.lineProgress : this.shadeProgress;
+
+        // Calculate which segment we're on
+        const totalSegments = path.length - 1;
+        const currentSegmentFloat = progress * totalSegments;
+        const currentSegment = Math.floor(currentSegmentFloat);
+
+        if (currentSegment >= totalSegments) {
+            // Phase complete
+            if (this.phase === 'linework') {
+                this.lineProgress = 1;
+                this.phase = 'shading';
+                this.updatePhaseUI();
+            } else {
+                this.shadeProgress = 1;
+                this.completeTattoo();
+            }
+            return;
+        }
+
+        // Get current segment points
+        const p1 = path[currentSegment];
+        const p2 = path[currentSegment + 1];
+
+        // Calculate distance from mouse to line segment
+        const dist = this.pointToSegmentDistance(this.mouseX, this.mouseY, p1.x, p1.y, p2.x, p2.y);
+
+        if (dist <= tolerance) {
+            // Check if moving forward along the path
+            const segmentProgress = currentSegmentFloat - currentSegment;
+            const targetX = p1.x + (p2.x - p1.x) * segmentProgress;
+            const targetY = p1.y + (p2.y - p1.y) * segmentProgress;
+
+            const nextTargetX = p1.x + (p2.x - p1.x) * Math.min(1, segmentProgress + 0.1);
+            const nextTargetY = p1.y + (p2.y - p1.y) * Math.min(1, segmentProgress + 0.1);
+
+            const distToNext = Math.hypot(this.mouseX - nextTargetX, this.mouseY - nextTargetY);
+            const distToCurrent = Math.hypot(this.mouseX - targetX, this.mouseY - targetY);
+
+            // Advance progress if close to or past target
+            if (distToCurrent < tolerance * 1.5) {
+                const progressIncrement = 0.002 * (this.phase === 'shading' ? 0.7 : 1);
+                if (this.phase === 'linework') {
+                    this.lineProgress = Math.min(1, this.lineProgress + progressIncrement);
+                } else {
+                    this.shadeProgress = Math.min(1, this.shadeProgress + progressIncrement);
+                }
+            }
+        } else {
+            // Mistake!
+            this.triggerMistake();
+        }
+    }
+
+    pointToSegmentDistance(px, py, x1, y1, x2, y2) {
+        const dx = x2 - x1;
+        const dy = y2 - y1;
+        const lenSq = dx * dx + dy * dy;
+
+        if (lenSq === 0) return Math.hypot(px - x1, py - y1);
+
+        let t = ((px - x1) * dx + (py - y1) * dy) / lenSq;
+        t = Math.max(0, Math.min(1, t));
+
+        const nearX = x1 + t * dx;
+        const nearY = y1 + t * dy;
+
+        return Math.hypot(px - nearX, py - nearY);
+    }
+
+    triggerMistake() {
+        this.pain += this.currentClient.mistakePenalty;
+
+        // Flash effect
+        const flash = document.getElementById('flash-overlay');
+        flash.classList.add('flash');
+        setTimeout(() => flash.classList.remove('flash'), 150);
+
+        // Show bark
+        this.showBark(this.currentDialogue.barks.mistake);
+
+        // Brief stall
+        this.needleActive = false;
+        setTimeout(() => this.updateNeedleIndicator(), 200);
+    }
+
+    checkPainBarks() {
+        if (this.pain >= 25 && !this.pain25Triggered) {
+            this.pain25Triggered = true;
+            this.showBark(this.currentDialogue.barks.pain25);
+        }
+        if (this.pain >= 50 && !this.pain50Triggered) {
+            this.pain50Triggered = true;
+            this.showBark(this.currentDialogue.barks.pain50);
+        }
+        if (this.pain >= 75 && !this.pain75Triggered) {
+            this.pain75Triggered = true;
+            this.showBark(this.currentDialogue.barks.pain75);
+        }
+    }
+
+    completeTattoo() {
+        this.phase = 'none';
+        this.showScreen('aftercare');
+        document.getElementById('aftercare-text').textContent =
+            `${this.currentClient.name}'s tattoo is complete! Apply aftercare to finish.`;
+    }
+
+    finishAftercareDialogue() {
+        this.showDialogue(this.currentDialogue.finish, () => {
+            this.tattoosCompleted++;
+            this.updateHUD();
+
+            if (this.tattoosCompleted >= 3) {
+                this.showScreen('complete');
+            } else {
+                this.currentClientIndex++;
+                if (this.quickRunMode) {
+                    this.goToBooth();
+                } else {
+                    this.showScreen('waiting');
+                    document.getElementById('waiting-text').textContent =
+                        `${this.currentClient.name} is waiting for their appointment.`;
+                }
+            }
+        });
+    }
+
+    failTattoo() {
+        this.phase = 'none';
+        this.needleActive = false;
+        document.getElementById('fail-text').textContent =
+            `${this.currentClient.name} couldn't handle the pain and tapped out.`;
+        this.showScreen('fail');
+    }
+
+    // Dialogue system
+    showDialogue(lines, callback) {
+        this.dialogueQueue = [...lines];
+        this.dialogueCallback = callback;
+        this.dialogueActive = true;
+        this.advanceDialogue();
+    }
+
+    advanceDialogue() {
+        if (this.dialogueQueue.length === 0) {
+            document.getElementById('dialogue-box').classList.remove('visible');
+            this.dialogueActive = false;
+            if (this.dialogueCallback) {
+                this.dialogueCallback();
+                this.dialogueCallback = null;
+            }
+            return;
+        }
+
+        const line = this.dialogueQueue.shift();
+        document.getElementById('dialogue-speaker').textContent = line.speaker;
+        document.getElementById('dialogue-text').textContent = line.text;
+        document.getElementById('dialogue-box').classList.add('visible');
+    }
+
+    showBark(bark) {
+        if (this.barkTimeout) clearTimeout(this.barkTimeout);
+
+        document.getElementById('bark-speaker').textContent = bark.speaker;
+        document.getElementById('bark-text').textContent = bark.text;
+        document.getElementById('bark-box').classList.add('visible');
+
+        this.barkTimeout = setTimeout(() => {
+            document.getElementById('bark-box').classList.remove('visible');
+        }, 2500);
+    }
+
+    // HUD updates
+    updateHUD() {
+        document.getElementById('pain-value').textContent = Math.floor(this.pain);
+        document.getElementById('pain-bar').style.width = `${Math.min(100, this.pain)}%`;
+        document.getElementById('tattoos-value').textContent = `${this.tattoosCompleted}/3`;
+        document.getElementById('client-name').textContent = this.currentClient ? this.currentClient.name : '---';
+
+        // Progress bar
+        let progress = 0;
+        if (this.phase === 'linework') progress = this.lineProgress * 50;
+        else if (this.phase === 'shading') progress = 50 + this.shadeProgress * 50;
+        else if (this.phase === 'stencil' && this.stencilConfirmed) progress = 0;
+        document.getElementById('progress-bar').style.width = `${progress}%`;
+    }
+
+    // Rendering
+    render() {
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+        if (this.phase === 'none') return;
+
+        // Draw skin background
+        this.ctx.fillStyle = '#d4a574';
+        this.ctx.fillRect(150, 100, 600, 450);
+
+        const client = this.currentClient;
+
+        // Draw target zone
+        this.ctx.strokeStyle = 'rgba(100, 100, 100, 0.3)';
+        this.ctx.lineWidth = 2;
+        this.ctx.setLineDash([5, 5]);
+        this.drawPath(client.linePath);
+        this.ctx.setLineDash([]);
+
+        if (this.phase === 'stencil') {
+            // Draw stencil ghost at mouse/stencil position
+            this.ctx.save();
+            this.ctx.translate(
+                this.stencilPosition.x - 400,
+                this.stencilPosition.y - 300
+            );
+            this.ctx.strokeStyle = this.stencilConfirmed ? '#2563eb' : '#7c3aed';
+            this.ctx.lineWidth = 3;
+            this.ctx.globalAlpha = 0.7;
+            this.drawPath(client.linePath);
+            this.ctx.restore();
+
+            if (!this.stencilConfirmed) {
+                // Draw "Press SPACE" hint
+                this.ctx.fillStyle = '#fff';
+                this.ctx.font = '16px sans-serif';
+                this.ctx.textAlign = 'center';
+                this.ctx.fillText('Press SPACE to confirm placement', 450, 580);
+            }
+        }
+
+        if (this.phase === 'linework' || this.phase === 'shading') {
+            // Draw completed linework
+            if (this.lineProgress > 0) {
+                this.ctx.strokeStyle = '#1a1a2e';
+                this.ctx.lineWidth = 4;
+                this.drawPartialPath(client.linePath, this.lineProgress);
+            }
+
+            // Draw completed shading
+            if (this.shadeProgress > 0 && this.phase === 'shading') {
+                this.ctx.strokeStyle = 'rgba(26, 26, 46, 0.5)';
+                this.ctx.lineWidth = 12;
+                this.drawPartialPath(client.shadePath, this.shadeProgress);
+            }
+
+            // Draw current target point
+            const path = this.phase === 'linework' ? client.linePath : client.shadePath;
+            const progress = this.phase === 'linework' ? this.lineProgress : this.shadeProgress;
+            const tolerance = this.phase === 'linework' ? client.tolerance : client.shadingTolerance;
+
+            const totalSegments = path.length - 1;
+            const currentSegmentFloat = progress * totalSegments;
+            const currentSegment = Math.min(Math.floor(currentSegmentFloat), totalSegments - 1);
+            const segmentProgress = currentSegmentFloat - currentSegment;
+
+            const p1 = path[currentSegment];
+            const p2 = path[currentSegment + 1] || p1;
+            const targetX = p1.x + (p2.x - p1.x) * segmentProgress;
+            const targetY = p1.y + (p2.y - p1.y) * segmentProgress;
+
+            // Draw tolerance circle
+            this.ctx.strokeStyle = this.needleActive ? '#ef4444' : '#60a5fa';
+            this.ctx.lineWidth = 2;
+            this.ctx.beginPath();
+            this.ctx.arc(targetX, targetY, tolerance, 0, Math.PI * 2);
+            this.ctx.stroke();
+
+            // Draw target dot
+            this.ctx.fillStyle = '#60a5fa';
+            this.ctx.beginPath();
+            this.ctx.arc(targetX, targetY, 5, 0, Math.PI * 2);
+            this.ctx.fill();
+
+            // Draw needle cursor
+            if (this.mouseX && this.mouseY) {
+                this.ctx.fillStyle = this.needleActive ? '#ef4444' : '#fff';
+                this.ctx.beginPath();
+                this.ctx.arc(this.mouseX, this.mouseY, this.needleActive ? 4 : 3, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
+    }
+
+    drawPath(path) {
+        if (path.length < 2) return;
+        this.ctx.beginPath();
+        this.ctx.moveTo(path[0].x, path[0].y);
+        for (let i = 1; i < path.length; i++) {
+            this.ctx.lineTo(path[i].x, path[i].y);
+        }
+        this.ctx.stroke();
+    }
+
+    drawPartialPath(path, progress) {
+        if (path.length < 2 || progress <= 0) return;
+
+        const totalSegments = path.length - 1;
+        const endSegmentFloat = progress * totalSegments;
+        const endSegment = Math.floor(endSegmentFloat);
+        const segmentProgress = endSegmentFloat - endSegment;
+
+        this.ctx.beginPath();
+        this.ctx.moveTo(path[0].x, path[0].y);
+
+        for (let i = 1; i <= endSegment && i < path.length; i++) {
+            this.ctx.lineTo(path[i].x, path[i].y);
+        }
+
+        // Draw partial segment
+        if (endSegment < totalSegments) {
+            const p1 = path[endSegment];
+            const p2 = path[endSegment + 1];
+            const partialX = p1.x + (p2.x - p1.x) * segmentProgress;
+            const partialY = p1.y + (p2.y - p1.y) * segmentProgress;
+            this.ctx.lineTo(partialX, partialY);
+        }
+
+        this.ctx.stroke();
+    }
+
+    // Debug functions
+    resetCurrentTattoo() {
+        this.startTattoo();
+    }
+
+    resetShift() {
+        this.tattoosCompleted = 0;
+        this.currentClientIndex = 0;
+        this.pain = 0;
+        this.phase = 'none';
+        this.updateHUD();
+        this.showScreen('street');
+    }
+
+    toggleQuickRun() {
+        this.quickRunMode = !this.quickRunMode;
+        const btn = document.getElementById('quick-run-btn');
+        btn.textContent = `Quick Run: ${this.quickRunMode ? 'ON' : 'OFF'}`;
+        btn.classList.toggle('active', this.quickRunMode);
+    }
+
+    retryTattoo() {
+        this.pain = 0;
+        this.startTattoo();
+    }
+}
+
+// Initialize game
+const game = new Game();
+    </script>
+</body>
+</html>
