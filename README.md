@@ -2,117 +2,145 @@
 
 A 10-15 minute vertical slice prototype demonstrating the core "needle feel" and pain tension mechanics of a tattoo artist precision game.
 
-## What This Prototype Proves
+## What Changed in v2
 
-1. **Needle Feel**: The path-following mechanic creates tactile tension through tolerance zones that require steady cursor control
-2. **Pain as Pressure**: The single Pain meter creates meaningful pacing decisions - push through or wipe/cool
-3. **Difficulty Scaling**: Three clients with increasing path complexity, tighter tolerances, and faster pain rates
-4. **Client Personality**: Dialogue and barks give each client distinct reactions to pain thresholds and mistakes
-5. **Session Arc**: A complete shift from entry to 3 completed tattoos provides a satisfying loop
+### Gameplay Overhaul
+- **Real linework tracing**: Trace along the full stencil path segment-by-segment (no more chasing a moving circle)
+- **Proper shading phase**: Fill inside the shape region with wider tolerance - different feel from linework
+- **Distinct tattoo designs**: Heart (Casey), Star (Miguel), Rose (Lila) - each with unique paths
+
+### Juice & Feedback
+- **Screen shake** on mistakes
+- **Ink smear effect** appears where you went off-path
+- **Audio cues** via Web Audio API (mistake buzz, wipe swoosh, completion chime, phase-complete ding)
+- **Wipe cooldown ring** with visual countdown timer
+- **Needle indicator** pulses and buzzes when active
+- **Pain bar pulses** when critical (75%+)
+- **Skin reddens** as pain increases
+
+### Polish
+- **Redesigned title screen** with gradient logo and stats
+- **Client cards** in waiting room showing avatar and difficulty badge
+- **Aftercare preview** shows your completed tattoo
+- **Shift complete gallery** displays all 3 tattoos with mistake count
+- **Improved typography** and color scheme throughout
+
+### Robustness
+- **Auto-pause** when tab loses focus (Visibility API)
+- **ESC to pause/resume** during gameplay
+- **Window resize** handling
+- **Proper delta-time** game loop (no more frame-rate dependent behavior)
+- **Mistake cooldown** prevents pain spam
+- **Mouse leave** properly deactivates needle
+
+---
+
+## 30-Second Demo Script
+
+1. Click **Start Shift** on title screen
+2. See Casey's client card → click through to **The Chair**
+3. **Stencil phase**: Drag the heart outline, press SPACE
+4. **Linework phase**: Hold mouse button, trace along the purple dashed path
+   - Stay inside the blue tolerance band
+   - Go outside = screen shake + ink smear + pain spike
+5. **Shading phase**: Hold mouse inside the heart region until filled
+6. Press **W** to wipe/cool and reduce pain (-18)
+7. Complete → Aftercare screen shows your tattoo
+8. Repeat for Miguel (star) and Lila (rose)
+9. **Shift Complete** shows all 3 tattoos + total mistakes
+
+---
 
 ## How to Run
 
-**Option 1: Direct browser open**
 ```bash
-# Open in default browser
+# Any of these work:
 xdg-open index.html          # Linux
 open index.html              # macOS
 start index.html             # Windows
+# Or double-click index.html
 ```
 
-**Option 2: Local server (if needed)**
-```bash
-python3 -m http.server 8000
-# Then open http://localhost:8000 in browser
-```
-
-**Option 3: Just double-click `index.html` in your file manager**
-
-The game loads instantly with zero dependencies.
+Zero dependencies. Loads instantly.
 
 ## Controls
 
 | Action | Control |
 |--------|---------|
 | Move stencil | Click and drag |
-| Confirm stencil | Press **SPACE** |
+| Confirm stencil | **SPACE** |
 | Activate needle | Hold **mouse button** |
-| Trace path | Move cursor along the blue target circle |
-| Wipe/Cool | Click **Wipe/Cool** button or press **W** |
+| Trace linework | Move along the stencil path |
+| Fill shading | Move inside the shape region |
+| Wipe/Cool | **W** or click button |
+| Pause/Resume | **ESC** |
 | Advance dialogue | Click dialogue box |
 
 ## Gameplay Loop
 
-1. **Street Front** - Enter the shop
-2. **Waiting Room** - See your next client
-3. **Front Desk** - Check in and view difficulty
-4. **Prep Station** - Equipment ready
-5. **The Chair** - Main tattoo gameplay:
-   - **Stencil**: Position the ghost outline, press SPACE to confirm
-   - **Linework**: Hold mouse and trace the outline within tolerance
-   - **Shading**: Same mechanic with wider tolerance, slower progress
-6. **Aftercare** - Complete the tattoo, increment counter
-7. Repeat for 3 clients, then **Shift Complete**
+1. **Title** → Start Shift
+2. **Waiting Room** → See client card with difficulty
+3. **Front Desk** → Check-in dialogue
+4. **Prep Station** → Equipment ready
+5. **The Chair** → Main gameplay:
+   - **Stencil**: Drag to position, SPACE to confirm
+   - **Linework**: Trace the path in order, stay in tolerance band
+   - **Shading**: Fill inside the shape region
+6. **Aftercare** → See completed tattoo, dialogue
+7. Repeat for 3 clients → **Shift Complete**
 
 ## Pain System
 
-- Pain increases continuously while needle is active
-- **Mistakes** (cursor outside tolerance while needle on) cause pain spikes + red flash
-- **Hesitation** (not moving while needle active) increases pain rate
-- **Wipe/Cool**: Reduces pain by 15, has 6-second cooldown
-- At **Pain 100**: Client taps out = fail
-- Barks trigger at 25%, 50%, 75% pain thresholds
+| Mechanic | Effect |
+|----------|--------|
+| Needle active | +painRate/sec (varies by client) |
+| Hesitation | +hesitationPenalty/sec after threshold |
+| Mistake (off-path) | +mistakePenalty (instant spike) |
+| Wipe/Cool | -18 pain, 6s cooldown |
+| Pain ≥ 100 | Client taps out = fail |
+
+Barks trigger at 25%, 50%, 75% pain thresholds.
 
 ## Difficulty Progression
 
-| Client | Difficulty | Tolerance | Pain Rate | Mistake Penalty |
-|--------|------------|-----------|-----------|-----------------|
-| Casey  | Easy       | 25px      | 3/sec     | +8              |
-| Miguel | Medium     | 20px      | 5/sec     | +12             |
-| Lila   | Hard       | 15px      | 7/sec     | +15             |
+| Client | Design | Line Tolerance | Shade Tolerance | Pain Rate | Mistake |
+|--------|--------|----------------|-----------------|-----------|---------|
+| Casey  | Heart  | 28px           | 45px            | 2.5/sec   | +6      |
+| Miguel | Star   | 22px           | 38px            | 4/sec     | +10     |
+| Lila   | Rose   | 16px           | 30px            | 6/sec     | +14     |
 
-## Debug Controls (bottom-right)
+## Debug Controls
 
-- **Reset Tattoo**: Restart current tattoo with pain at 0
-- **Reset Shift**: Return to title, reset all progress
-- **Quick Run**: Skip navigation, jump straight to chair for each client
-
-## Known Limitations
-
-- No audio (placeholder system not implemented)
-- Simplified path designs (geometric shapes vs. realistic tattoo art)
-- Stencil placement has no fail state (any position accepted)
-- No save/load system
-- Single session only (browser refresh resets)
-- Wipe cooldown timer not displayed numerically
-- No touch/mobile support
+- **Reset Tattoo**: Restart current tattoo
+- **Reset Shift**: Back to title, clear all progress
+- **Quick: ON/OFF**: Skip navigation, jump straight to chair
 
 ## Tech Stack
 
 - **Engine**: Vanilla HTML5 Canvas + JavaScript
-- **Why Web**: Zero installation, single-file, runs in any browser
-- **Lines of code**: ~700 (single self-contained file)
+- **Audio**: Web Audio API (procedural sounds, no files)
+- **Size**: ~2100 lines, single self-contained file
+- **Dependencies**: None
 
-## File Structure
+## What's NOT in v2 (Scope Discipline)
 
-```
-inkline/
-├── index.html           # Complete runnable game
-├── README.md            # This file
-├── SLICE_SPEC.md        # Design specification
-├── DIALOGUE.yml         # Source dialogue data
-├── ASSET_MANIFEST.yml   # Asset requirements
-└── ... (other pitch docs)
-```
+- No inventory/shop/economy
+- No skill trees or progression
+- No extra clients beyond 3
+- No extra locations beyond 6
+- No save/load
+- No touch/mobile support
 
-## Acceptance Criteria Met
+## Acceptance Criteria
 
-- [x] Runs in under 2 minutes (instant browser open)
-- [x] 3 tattoos completable in 10-15 minutes
-- [x] Pain meter matches spec (continuous + spikes + thresholds)
-- [x] Tattoos Completed counter works (0/3 → 3/3)
-- [x] No extra systems (economy, crafting, etc.)
-- [x] 6 locations implemented as screens
-- [x] Dialogue from DIALOGUE.yml integrated
-- [x] Barks trigger at pain thresholds
-- [x] Debug controls for playtesting
+- [x] Single pressure system: Pain meter (0-100)
+- [x] Single progress metric: Tattoos Completed (0/3 → 3/3)
+- [x] Same 3 clients with escalating difficulty
+- [x] 6-location flow preserved
+- [x] Quick Run + Reset Tattoo/Shift debug controls
+- [x] Runs by opening index.html (no build tools)
+- [x] Linework = trace polyline path in order
+- [x] Shading = fill region with wider tolerance
+- [x] Juice: shake, smear, sounds, cooldown visual
+- [x] Robust: pause on tab-out, resize-safe, no stuck inputs
+- [x] Polished: title screen, rewarding completion screens
